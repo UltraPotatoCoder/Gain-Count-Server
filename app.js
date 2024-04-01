@@ -20,12 +20,6 @@ require('./config')(app);
 const indexRoutes = require('./routes/index.routes');
 app.use('/api', indexRoutes);
 
-const projectsRoutes = require('./routes/project.routes');
-app.use('/api', isAuthenticated, projectsRoutes);
-
-const tasksRoutes = require('./routes/tasks.routes');
-app.use('/api', isAuthenticated, tasksRoutes);
-
 const authRoutes = require('./routes/auth.routes');
 app.use('/auth', authRoutes);
 
