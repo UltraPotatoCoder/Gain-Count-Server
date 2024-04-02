@@ -35,6 +35,53 @@ router.post('/workout', async (req, res, next) => {
 
 //? ------------ ROUTE TO GET ALL THE WORKOUTS FROM A USER ------------ //
 
-//? ------------ ROUTE TO DELETE A WORKOUT FOR A USER ------------ //
+router.get('/workouts/:userId', async (req, res, next) => {
+  const userId = req.params.userId;
+
+  try {
+    const user = await User.findById(userId).populate('workouts');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const workouts = user.workouts;
+
+    res.status(200).json(workouts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//! ------------ ROUTE TO DELETE A WORKOUT FOR A USER ------------ //
+
+router.delete('/workouts/:userId/:workoutId', async (req, res, next) => {
+  const userId = req.params.userId;
+  const workoutId = req.params.workoutId;
+
+  try {
+    await Workout.findByIdAndDelete(workoutId);
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const index = user.workouts.indexOf(workoutId);
+    if (index === -1) {
+      return res
+        .status(404)
+        .json({ message: 'Workout not found for this user' });
+    }
+
+    user.workouts.splice(index, 1);
+    await user.save();
+
+    res.status(202).json({ message: 'Workout deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;
