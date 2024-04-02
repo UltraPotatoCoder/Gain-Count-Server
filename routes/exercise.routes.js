@@ -34,4 +34,22 @@ router.post('/exercise', async (req, res, next) => {
 
 //? ------------ ROUTE TO GET ALL OF THE EXERCISES FROM THE WORKOUT ------------ //
 
+router.get('/exercises/:workoutId', async (req, res, next) => {
+  const workoutId = req.params.workoutId;
+
+  try {
+    const workout = await Workout.findById(workoutId).populate('exercises');
+
+    if (!workout) {
+      return res.status(404).json({ message: 'Workout not found' });
+    }
+
+    const exercises = workout.exercises;
+
+    res.status(200).json(exercises);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
