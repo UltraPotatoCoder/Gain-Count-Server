@@ -53,6 +53,42 @@ router.get('/workouts/:userId', async (req, res, next) => {
   }
 });
 
+//? ------------ ROUTE TO UPDATE INFORMATION ON THE WORKOUT ------------ //
+
+router.put('/workouts/:userId/:workoutId', async (req, res, next) => {
+  const userId = req.params.userId;
+  const workoutId = req.params.workoutId;
+  const { name, date, time, duration, notes, exercises } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const index = user.workouts.indexOf(workoutId);
+    if (index === -1) {
+      return res
+        .status(404)
+        .json({ message: 'Workout not found for this user' });
+    }
+
+    await Workout.findByIdAndUpdate(workoutId, {
+      name,
+      date,
+      time,
+      duration,
+      notes,
+      exercises,
+    });
+
+    res.status(202).json({ message: 'Workout updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 //! ------------ ROUTE TO DELETE A WORKOUT FOR A USER ------------ //
 
 router.delete('/workouts/:userId/:workoutId', async (req, res, next) => {
