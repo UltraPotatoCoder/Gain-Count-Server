@@ -17,10 +17,6 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'Name is required.'],
     },
-    weight: {
-      type: Number,
-      required: [true, 'weight is required'],
-    },
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`

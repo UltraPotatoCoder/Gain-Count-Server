@@ -2,9 +2,9 @@ const { Schema, model } = require('mongoose');
 
 const exerciseSchema = new Schema(
   {
-    workout: {
+    user: {
       type: Schema.Types.ObjectId,
-      ref: 'Workout',
+      ref: 'User',
     },
     name: {
       type: String,
