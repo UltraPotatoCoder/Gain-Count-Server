@@ -2,9 +2,9 @@ const { Schema, model } = require('mongoose');
 
 const workoutSchema = new Schema(
   {
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+    name: {
+      type: String,
+      required: true,
     },
     date: {
       type: Date,
@@ -15,19 +15,21 @@ const workoutSchema = new Schema(
       required: true,
     },
     duration: {
-      type: String,
+      type: Number,
       required: true,
     },
-    notes: {
-      type: String,
-      required: false,
-    },
+    notes: String,
     exercises: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Exercise',
       },
     ],
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`

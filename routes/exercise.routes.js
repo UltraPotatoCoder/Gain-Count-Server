@@ -2,16 +2,17 @@ const router = require('express').Router();
 const Exercise = require('../models/Exercise.model');
 
 router.post('/exercise', async (req, res, next) => {
-  const { user, name, sets, reps, weight, notes } = req.body;
+  const { name, sets, reps, weight, notes, duration, workout } = req.body;
 
   try {
     const newExercise = await Exercise.create({
-      user,
       name,
       sets,
       reps,
       weight,
       notes,
+      duration,
+      workout,
     });
 
     res.status(201).json(newExercise);
