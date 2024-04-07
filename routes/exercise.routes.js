@@ -82,4 +82,35 @@ router.put('/exercise/:exerciseId', async (req, res, next) => {
   }
 });
 
+//! ------------ ROUTE TO DELETE AN EXERCISE FORM THE WORKOUT ------------ //
+
+router.delete('/exercise/:workoutId/:exerciseId', async (req, res, next) => {
+  const workoutId = req.params.workoutId;
+  const exerciseId = req.params.exerciseId;
+
+  try {
+    const workout = await Workout.findById(workoutId);
+
+    if (!workout) {
+      return res.status(404).json({ message: 'Workout not found' });
+    }
+
+    const index = workout.exercises.indexOf(exerciseId);
+    if (index === -1) {
+      return res
+        .status(404)
+        .json({ message: 'Exercise not found for this workout' });
+    }
+
+    workout.exercises.splice(index, 1);
+    await workout.save();
+
+    await Exercise.findByIdAndDelete(exerciseId);
+
+    res.status(200).json({ message: 'Exercise deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
