@@ -52,4 +52,34 @@ router.get('/exercises/:workoutId', async (req, res, next) => {
   }
 });
 
+//? ------------ ROUTE TO UPDATE A CERTAIN EXERCISE INFORMATION ------------ //
+
+router.put('/exercise/:exerciseId', async (req, res, next) => {
+  const exerciseId = req.params.exerciseId;
+  const { name, sets, reps, weight, notes, duration } = req.body;
+
+  try {
+    const updatedExercise = await Exercise.findByIdAndUpdate(
+      exerciseId,
+      {
+        name,
+        sets,
+        reps,
+        weight,
+        notes,
+        duration,
+      },
+      { new: true }
+    );
+
+    if (!updatedExercise) {
+      return res.status(404).json({ message: 'Exercise not found' });
+    }
+
+    res.status(204).json(updatedExercise);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
